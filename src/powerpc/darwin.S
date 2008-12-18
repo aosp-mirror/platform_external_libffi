@@ -79,12 +79,13 @@ LCFI1:
 LCFI2:
 	/* Call ffi_prep_args.  */
 	mr	r4,r1
-	subi	r1,r1,32 /* adjust stack for parameter / scratch area */
+// ANDROID: these changes were necessary in 2.x; not yet tested in 3.x
+//	subi    r1,r1,32 /* Android: adjust stack for parameter / scratch area */
 	li	r9,0
 
 	mtctr	r12 /* r12 holds address of _ffi_prep_args.  */
 	bctrl
-	addi	r1,r1,32 /* readjust stack (see subi above) */
+//	addi    r1,r1,32 /* Android: readjust stack (see subi above) */
 	lwz     r2,20(r1)
 
 	/* Now do the call.

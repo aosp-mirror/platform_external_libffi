@@ -12,7 +12,7 @@
 #define EH_FRAME_FLAGS "aw"
 
 /* Define this if you want extra debugging. */
-#define FFI_DEBUG 1
+#undef FFI_DEBUG
 
 /* Define this is you do not want support for the raw API. */
 #undef FFI_NO_RAW_API
@@ -27,12 +27,18 @@
    */
 #define HAVE_ALLOCA_H 1
 
+/* Define if your assembler supports .cfi_* directives. */
+#undef HAVE_AS_CFI_PSEUDO_OP
+
 /* Define if your assembler supports .register. */
 #undef HAVE_AS_REGISTER_PSEUDO_OP
 
 /* Define if your assembler and linker support unaligned PC relative relocs.
    */
 #undef HAVE_AS_SPARC_UA_PCREL
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#define HAVE_DLFCN_H 1
 
 /* Define if __attribute__((visibility("hidden"))) is supported. */
 #undef HAVE_HIDDEN_VISIBILITY_ATTRIBUTE
@@ -109,15 +115,15 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* The size of a `double', as computed by sizeof. */
+/* The size of `double', as computed by sizeof. */
 #define SIZEOF_DOUBLE 8
 
-/* The size of a `long double', as computed by sizeof. */
+/* The size of `long double', as computed by sizeof. */
 #undef SIZEOF_LONG_DOUBLE
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
-   automatically deduced at run-time.
+   automatically deduced at runtime.
 	STACK_DIRECTION > 0 => grows toward higher addresses
 	STACK_DIRECTION < 0 => grows toward lower addresses
 	STACK_DIRECTION = 0 => direction of growth unknown */

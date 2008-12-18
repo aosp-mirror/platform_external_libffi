@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 The Android Open Source Project
+ * Copyright 2008 The Android Open Source Project
  */
 #ifndef LIBFFI_H
 

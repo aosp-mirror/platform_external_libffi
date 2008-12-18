@@ -23,7 +23,6 @@ ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-arm)
 endif
 ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
   LOCAL_SRC_FILES += src/x86/ffi.c src/x86/sysv.S
-  LOCAL_CFLAGS := -DCONF_HAVE_LONG_DOUBLE
 endif
 
 ifeq ($(LOCAL_SRC_FILES),)
