@@ -1,40 +1,65 @@
 # Copyright 2007 The Android Open Source Project
 #
-# The libffi code is organized primarily by architecture, but at some
-# point OS-specific issues started to creep in.  In some cases there are
-# OS-specific source files, in others there are just #ifdefs in the code.
-# We need to generate the appropriate defines and select the right set of
-# source files for the OS and architecture.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-ifneq ($(TARGET_ARCH),arm)
+# This makefile builds both for host and target, and so all the
+# common definitions are factored out into a separate file to
+# minimize duplication between the build rules.
 
 LOCAL_PATH:= $(call my-dir)
-include $(CLEAR_VARS)
 
-LOCAL_C_INCLUDES := \
-	external/libffi/include \
-	external/libffi/$(TARGET_OS)-$(TARGET_ARCH)
 
-LOCAL_SRC_FILES := src/debug.c src/prep_cif.c src/types.c \
-        src/raw_api.c src/java_raw_api.c
+#
+# Build rules for the target.
+#
 
-ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-arm)
-  LOCAL_SRC_FILES += src/arm/sysv.S src/arm/ffi.c
+# We only build ffi for non-arm targets.
+ifneq ($(TARGET_ARCH),arm)
+
+    include $(CLEAR_VARS)
+
+    ffi_arch := $(TARGET_ARCH)
+    ffi_os := $(TARGET_OS)
+
+    include $(LOCAL_PATH)/Libffi.mk
+
+    LOCAL_MODULE := libffi
+
+    include $(BUILD_SHARED_LIBRARY)
+
 endif
-ifeq ($(TARGET_OS)-$(TARGET_ARCH),linux-x86)
-  LOCAL_SRC_FILES += src/x86/ffi.c src/x86/sysv.S
+
+
+#
+# Build rules for the host.
+#
+
+ifeq ($(WITH_HOST_DALVIK),true)
+
+    include $(CLEAR_VARS)
+
+    ffi_arch := $(HOST_ARCH)
+    ffi_os := $(HOST_OS)
+
+    include $(LOCAL_PATH)/Libffi.mk
+
+    LOCAL_MODULE := libffi-host
+
+    include $(BUILD_HOST_STATIC_LIBRARY)
+
 endif
 
-ifeq ($(LOCAL_SRC_FILES),)
-  LOCAL_SRC_FILES := your-architecture-not-supported-by-ffi-makefile.c
-endif
 
-LOCAL_MODULE := libffi
-
-
-include $(BUILD_SHARED_LIBRARY)
-
-
+# Also include the rules for the test suite.
 include external/libffi/testsuite/Android.mk
 
-endif
