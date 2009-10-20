@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# Common definitions for host or target builds of libffi
-#
-
 # The libffi code is organized primarily by architecture, but at some
 # point OS-specific issues started to creep in. In some cases there
 # are OS-specific source files, in others there are just #ifdefs in
@@ -43,6 +39,9 @@ ifeq ($(LOCAL_SRC_FILES),)
   LOCAL_SRC_FILES := your-architecture-not-supported-by-ffi-makefile.c
 endif
 
-LOCAL_SRC_FILES += src/debug.c src/prep_cif.c src/types.c \
-        src/raw_api.c src/java_raw_api.c
-
+LOCAL_SRC_FILES += \
+	src/debug.c \
+	src/java_raw_api.c \
+	src/prep_cif.c \
+        src/raw_api.c \
+	src/types.c

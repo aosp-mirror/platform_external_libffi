@@ -23,42 +23,24 @@ LOCAL_PATH:= $(call my-dir)
 # Build rules for the target.
 #
 
-# We only build ffi for non-arm targets.
+# We only build ffi at all for non-arm, non-x86 targets.
 ifneq ($(TARGET_ARCH),arm)
+    ifneq ($(TARGET_ARCH),x86)
 
-    include $(CLEAR_VARS)
+       include $(CLEAR_VARS)
 
-    ffi_arch := $(TARGET_ARCH)
-    ffi_os := $(TARGET_OS)
+       ffi_arch := $(TARGET_ARCH)
+       ffi_os := $(TARGET_OS)
 
-    include $(LOCAL_PATH)/Libffi.mk
+       # This include just keeps the nesting a bit saner.
+       include $(LOCAL_PATH)/Libffi.mk
 
-    LOCAL_MODULE := libffi
+       LOCAL_MODULE := libffi
 
-    include $(BUILD_SHARED_LIBRARY)
+       include $(BUILD_SHARED_LIBRARY)
 
+    endif
 endif
-
-
-#
-# Build rules for the host.
-#
-
-ifeq ($(WITH_HOST_DALVIK),true)
-
-    include $(CLEAR_VARS)
-
-    ffi_arch := $(HOST_ARCH)
-    ffi_os := $(HOST_OS)
-
-    include $(LOCAL_PATH)/Libffi.mk
-
-    LOCAL_MODULE := libffi-host
-
-    include $(BUILD_HOST_STATIC_LIBRARY)
-
-endif
-
 
 # Also include the rules for the test suite.
 include external/libffi/testsuite/Android.mk

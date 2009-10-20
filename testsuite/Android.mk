@@ -16,53 +16,23 @@ LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
 
-#
-# Common definitions for host and target
-#
-
-# Single test file to use when doing default build. For the target
-# (device), this is the only way to build and run tests, but for the
-# host you can use the "run-ffi-tests" script in this directory to
-# run all the tests.
+# Single test file to use when doing a default build.
 FFI_SINGLE_TEST_FILE := libffi.call/struct5.c
 
-
-#
-# Build rules for the target.
-#
-
-# We only build ffi at all for non-arm targets.
+# We only build ffi at all for non-arm, non-x86 targets.
 ifneq ($(TARGET_ARCH),arm)
+    ifneq ($(TARGET_ARCH),x86)
 
-    include $(CLEAR_VARS)
+        include $(CLEAR_VARS)
 
-    LOCAL_SRC_FILES := $(FFI_SINGLE_TEST_FILE)
-    LOCAL_C_INCLUDES := external/libffi/$(TARGET_OS)-$(TARGET_ARCH)
-    LOCAL_SHARED_LIBRARIES := libffi
+        LOCAL_SRC_FILES := $(FFI_SINGLE_TEST_FILE)
+        LOCAL_C_INCLUDES := external/libffi/$(TARGET_OS)-$(TARGET_ARCH)
+        LOCAL_SHARED_LIBRARIES := libffi
 
-    LOCAL_MODULE := ffi-test
-    LOCAL_MODULE_TAGS := tests
+        LOCAL_MODULE := ffi-test
+        LOCAL_MODULE_TAGS := tests
 
-    include $(BUILD_EXECUTABLE)
+        include $(BUILD_EXECUTABLE)
 
-endif
-
-
-#
-# Build rules for the host.
-#
-
-ifeq ($(WITH_HOST_DALVIK),true)
-
-    include $(CLEAR_VARS)
-
-    LOCAL_SRC_FILES := $(FFI_SINGLE_TEST_FILE)
-    LOCAL_C_INCLUDES := external/libffi/$(HOST_OS)-$(HOST_ARCH)
-    LOCAL_SHARED_LIBRARIES := libffi-host
-
-    LOCAL_MODULE := ffi-test-host
-    LOCAL_MODULE_TAGS := tests
-
-    include $(BUILD_HOST_EXECUTABLE)
-
+    endif
 endif
