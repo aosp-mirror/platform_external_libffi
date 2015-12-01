@@ -45,10 +45,12 @@ endif
 
 ifeq ($(ffi_os)-$(ffi_arch),linux-x86)
 LOCAL_SRC_FILES := src/x86/ffi.c src/x86/sysv.S
+LOCAL_ASFLAGS += -DHAVE_AS_X86_PCREL
 endif
 
 ifeq ($(ffi_os)-$(ffi_arch),linux-x86_64)
 LOCAL_SRC_FILES := src/x86/ffi64.c src/x86/unix64.S
+LOCAL_ASFLAGS += -DHAVE_AS_X86_PCREL
 endif
 
 ifeq ($(LOCAL_SRC_FILES),)
