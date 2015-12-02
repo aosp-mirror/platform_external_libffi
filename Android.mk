@@ -41,19 +41,28 @@ LOCAL_CFLAGS += -Wno-sign-compare
 
 ifeq ($(ffi_os)-$(ffi_arch),linux-arm)
 LOCAL_SRC_FILES := src/arm/sysv.S src/arm/ffi.c
+valid_arch := true
 endif
 
 ifeq ($(ffi_os)-$(ffi_arch),linux-x86)
-LOCAL_SRC_FILES := src/x86/ffi.c src/x86/sysv.S
-LOCAL_ASFLAGS += -DHAVE_AS_X86_PCREL
+LOCAL_SRC_FILES := src/x86/ffi.c src/x86/sysv.S src/x86/win32.S
+LOCAL_ASFLAGS += \
+	-DHAVE_AS_X86_PCREL \
+	-DHAVE_AS_ASCII_PSEUDO_OP
+valid_arch := true
 endif
 
 ifeq ($(ffi_os)-$(ffi_arch),linux-x86_64)
-LOCAL_SRC_FILES := src/x86/ffi64.c src/x86/unix64.S
-LOCAL_ASFLAGS += -DHAVE_AS_X86_PCREL
+LOCAL_SRC_FILES_64 := src/x86/ffi64.c src/x86/unix64.S
+LOCAL_SRC_FILES_32 := src/x86/ffi.c src/x86/sysv.S src/x86/win32.S
+LOCAL_ASFLAGS += \
+	-DHAVE_AS_X86_PCREL \
+	-DHAVE_AS_ASCII_PSEUDO_OP
+
+valid_arch := true
 endif
 
-ifeq ($(LOCAL_SRC_FILES),)
+ifneq ($(valid_arch),true)
 $(error The os/architecture $(ffi_os)-$(ffi_arch) is not supported by cheets-libffi.)
 endif
 
