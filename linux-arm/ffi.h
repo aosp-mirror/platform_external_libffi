@@ -21,6 +21,6 @@
 #include "../src/arm/ffitarget.h"
 #undef LIBFFI_H
 
-#include "../include/ffi.h"
+#include "ffi_gen.h"
 
 #endif

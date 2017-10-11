@@ -1,0 +1,85 @@
+// Copyright (C) 2017 The Android Open Source Project
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+genrule {
+    name: "ffi_header",
+    cmd: "$(location gen_ffi_header.sh) < $(in) > $(out)",
+    srcs: ["include/ffi.h.in"],
+    out: ["ffi_gen.h"],
+    tool_files: ["gen_ffi_header.sh"],
+}
+
+arm_srcs = [
+    "src/arm/sysv.S",
+    "src/arm/ffi.c",
+]
+
+x86_srcs = [
+    "src/x86/ffi.c",
+    "src/x86/sysv.S",
+    "src/x86/win32.S",
+]
+
+x86_64_srcs = [
+    "src/x86/ffi64.c",
+    "src/x86/unix64.S",
+]
+
+cc_library_static {
+    name: "libffi",
+    cflags: ["-Wno-unused-parameter", "-Wno-sign-compare"],
+    local_include_dirs: ["include"],
+    generated_headers: ["ffi_header"],
+    export_generated_headers: ["ffi_header"],
+    srcs: [
+        "src/debug.c",
+        "src/java_raw_api.c",
+        "src/prep_cif.c",
+        "src/raw_api.c",
+        "src/types.c",
+    ],
+    multilib: {
+        lib64: {
+            srcs: x86_64_srcs,
+        },
+        lib32: {
+            srcs: arm_srcs + x86_srcs,
+        },
+    },
+    arch: {
+        arm: {
+            exclude_srcs: x86_srcs + x86_64_srcs,
+            local_include_dirs: ["linux-arm"],
+            export_include_dirs: ["linux-arm"],
+        },
+        x86: {
+            exclude_srcs: arm_srcs,
+            asflags: [
+                "-DHAVE_AS_X86_PCREL",
+                "-DHAVE_AS_ASCII_PSEUDO_OP",
+            ],
+            local_include_dirs: ["linux-x86"],
+            export_include_dirs: ["linux-x86"],
+        },
+        x86_64: {
+            exclude_srcs: arm_srcs,
+            asflags: [
+                "-DHAVE_AS_X86_PCREL",
+                "-DHAVE_AS_ASCII_PSEUDO_OP",
+            ],
+            local_include_dirs: ["linux-x86_64"],
+            export_include_dirs: ["linux-x86_64"],
+        },
+    },
+}

@@ -22,6 +22,6 @@
 #include "../src/x86/ffitarget.h"
 #undef LIBFFI_H
 
-#include "../include/ffi.h"
+#include "ffi_gen.h"
 
 #endif
