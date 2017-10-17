@@ -20,22 +20,6 @@ genrule {
     tool_files: ["gen_ffi_header.sh"],
 }
 
-arm_srcs = [
-    "src/arm/sysv.S",
-    "src/arm/ffi.c",
-]
-
-x86_srcs = [
-    "src/x86/ffi.c",
-    "src/x86/sysv.S",
-    "src/x86/win32.S",
-]
-
-x86_64_srcs = [
-    "src/x86/ffi64.c",
-    "src/x86/unix64.S",
-]
-
 cc_library_static {
     name: "libffi",
     cflags: ["-Wno-unused-parameter", "-Wno-sign-compare"],
@@ -49,36 +33,42 @@ cc_library_static {
         "src/raw_api.c",
         "src/types.c",
     ],
-    multilib: {
-        lib64: {
-            srcs: x86_64_srcs,
-        },
-        lib32: {
-            srcs: arm_srcs + x86_srcs,
-        },
-    },
     arch: {
         arm: {
-            exclude_srcs: x86_srcs + x86_64_srcs,
-            local_include_dirs: ["linux-arm"],
+            srcs: [
+                "src/arm/sysv.S",
+                "src/arm/ffi.c",
+            ],
             export_include_dirs: ["linux-arm"],
         },
+        arm64: {
+            srcs: [
+                "src/aarch64/sysv.S",
+                "src/aarch64/ffi.c",
+            ],
+            export_include_dirs: ["linux-arm64"],
+        },
         x86: {
-            exclude_srcs: arm_srcs,
+            srcs: [
+                "src/x86/ffi.c",
+                "src/x86/sysv.S",
+                "src/x86/win32.S",
+            ],
             asflags: [
                 "-DHAVE_AS_X86_PCREL",
                 "-DHAVE_AS_ASCII_PSEUDO_OP",
             ],
-            local_include_dirs: ["linux-x86"],
             export_include_dirs: ["linux-x86"],
         },
         x86_64: {
-            exclude_srcs: arm_srcs,
+            srcs: [
+                "src/x86/ffi64.c",
+                "src/x86/unix64.S",
+            ],
             asflags: [
                 "-DHAVE_AS_X86_PCREL",
                 "-DHAVE_AS_ASCII_PSEUDO_OP",
             ],
-            local_include_dirs: ["linux-x86_64"],
             export_include_dirs: ["linux-x86_64"],
         },
     },
