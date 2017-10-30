@@ -22,7 +22,14 @@ genrule {
 
 cc_library_static {
     name: "libffi",
-    cflags: ["-Wno-unused-parameter", "-Wno-sign-compare"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-Wno-error=incompatible-pointer-types",
+        "-Wno-pointer-arith",
+        "-Wno-sign-compare",
+        "-Wno-unused-parameter",
+    ],
     local_include_dirs: ["include"],
     generated_headers: ["ffi_header"],
     export_generated_headers: ["ffi_header"],
