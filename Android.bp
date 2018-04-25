@@ -22,6 +22,7 @@ genrule {
 
 cc_library_static {
     name: "libffi",
+    vendor_available: true,
     cflags: [
         "-Wall",
         "-Werror",
