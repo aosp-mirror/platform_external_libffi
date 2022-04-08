@@ -1,2 +1,2 @@
 #!/bin/sh
-exec autoreconf -v -i
+exec autoreconf -v -f -i
