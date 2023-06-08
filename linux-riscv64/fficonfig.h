@@ -119,7 +119,7 @@
 #define SIZEOF_DOUBLE 8
 
 /* The size of `long double', as computed by sizeof. */
-#undef SIZEOF_LONG_DOUBLE 16
+#undef SIZEOF_LONG_DOUBLE
 
 /* If using the C implementation of alloca, define if you know the
    direction of stack growth for your system; otherwise it will be
