@@ -132,6 +132,13 @@ cc_library {
             ],
             export_include_dirs: ["linux-x86_64"],
         },
+        riscv64: {
+            srcs: [
+                "src/riscv/ffi.c",
+                "src/riscv/sysv.S",
+            ],
+            export_include_dirs: ["linux-riscv64"],
+        },
     },
     apex_available: [
         "//apex_available:platform",
