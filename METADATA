@@ -6,12 +6,11 @@ third_party {
     value: "https://github.com/libffi/libffi.git"
   }
   version: "v3.3"
-  license_note: "would be NOTICE save for:\n"
-  "   .travis/\n"
-  "   testsuite/lib*/\n"
-  "   libtool-ldflags\n"
-  "   LICENSE-BUILDTOOLS"
   license_type: RESTRICTED
+  license_note: "would be NOTICE save for:\n   .travis/\n   testsuite/lib*/\n   libtool-ldflags\n   LICENSE-BUILDTOOLS"
+  security {
+    tag: "NVD-CPE2.3:cpe:/a:libffi_project:libffi:3.3"
+  }
   last_upgrade_date {
     year: 2020
     month: 3
